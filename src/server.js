@@ -1,13 +1,20 @@
+const http = require('http');
 const express = require('express');
 const morgan = require('morgan');
 const {router} = require('./routing');
-const app = express();
+const {initSocket} = require('./socket');
+
 
 const initServer = (port) => {
+  const app = express();
+  const server = http.createServer(app);
+
+  initSocket(server);
+
   app.use(morgan('tiny'));
   app.use(router);
 
-  app.listen(port, () => {
+  server.listen(port, () => {
     console.log(`Listening at port ${port}`);
   });
 };

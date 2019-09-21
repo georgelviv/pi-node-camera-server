@@ -1,10 +1,14 @@
+const path = require('path');
 const express = require('express');
-const {takePhoto} = require('./camera');
+const {initCameraStreaming} = require('./camera');
 const router = express.Router();
 
-router.get('/', async (req, res) => {
-  const result = await takePhoto();
-  res.json(result);
+router.get('/', (_, res) => {
+  res.sendFile(path.join(process.cwd(), 'static', 'index.html'));
+});
+
+router.get('/check', (_, res) => {
+  res.send('ok');
 });
 
 module.exports = {

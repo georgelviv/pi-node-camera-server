@@ -1,22 +1,10 @@
 const {spawn} = require('child_process');
 
 
-const takePhoto = () => {
-  return new Promise((resolve, reject) => {
-    const child = spawn('pwd');
-    let payload = '';
-
-    child.stdout.on('data', (data) => {
-      payload += data;
-    });
-
-    child.on('exit', (code, signal) => {
-      let data = payload.toString();
-      resolve({code, signal, data});
-    });
-  });
+const initCameraStreaming = () => {
+  return spawn('raspivid', ['-t', '0', '-l', '-o', 'tcp://0.0.0.0:3333']);
 };
 
 module.exports = {
-  takePhoto
+  initCameraStreaming
 };
