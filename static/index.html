@@ -7,12 +7,16 @@
   <title>Document</title>
 </head>
 <body>
+  <img id="img" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
   <script>
-    const socket = io.connect('http://192.168.31.216:3000/');
+    const socket = io.connect();
+    const imageElem = document.getElementById('img');
+
     socket.on('image', (data) => {
-      console.log(data);
+      imageElem.src = 'data:image/jpeg;base64,' + data;
     })
   </script>
+
 </body>
 </html>

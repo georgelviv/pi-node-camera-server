@@ -1,6 +1,5 @@
 const path = require('path');
 const express = require('express');
-const {initCameraStreaming} = require('./camera');
 const router = express.Router();
 
 router.get('/', (_, res) => {

@@ -1,7 +1,12 @@
 require('dotenv').config();
+require('module-alias/register');
 
-const {initServer} = require('./server');
-const port = process.env.SERVER_PORT;
+const {
+  WEB_SERVER_PORT,
+  CAMERA_STREAMING_PORT
+} = process.env;
+const {initCameraSocket} = require('./camera-socket');
+const {initWebServer} = require('./web-server');
 
-initServer(port);
-
+initCameraSocket({cameraStreamingPort: CAMERA_STREAMING_PORT});
+// initWebServer({webServerPort: WEB_SERVER_PORT});

@@ -5,7 +5,9 @@ const {router} = require('./routing');
 const {initSocket} = require('./socket');
 
 
-const initServer = (port) => {
+const initWebServer = ({
+  webServerPort
+}) => {
   const app = express();
   const server = http.createServer(app);
 
@@ -14,11 +16,11 @@ const initServer = (port) => {
   app.use(morgan('tiny'));
   app.use(router);
 
-  server.listen(port, () => {
-    console.log(`Listening at port ${port}`);
+  server.listen(webServerPort, () => {
+    console.log(`Listening at port ${webServerPort}`);
   });
 };
 
 module.exports = {
-  initServer
+  initWebServer
 };
