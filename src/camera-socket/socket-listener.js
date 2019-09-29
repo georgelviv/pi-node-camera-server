@@ -1,25 +1,24 @@
 const {ee} = require('src/utils');
+const {socketLog} = require('./log');
+const {ImgBuf} = require('./image-buf');
 
 const socketListener = (socket) => {
-  console.log('client connected');
+  const {address} = socket.address();
+  const log = socketLog(address.slice(-3));
+  const handler = (img) => {
+    log('image received');
+    ee.emit('img', img);
+  };
+  const imgBuf = new ImgBuf({handler});
+
+  log('client connected');
 
   socket.on('data', (msg) => {
-
-    if (msg.length === 4) {
-      const imgLength = msg.readUInt32LE();
-      if (image) {
-        ee.emit('img', image);
-      }
-      image = new Img({length: imgLength});
-    } else {
-      image && image.append(msg);
-    }
-
-    console.log(msg.length);
+    imgBuf.push(msg);
   });
 
   socket.on('end', () => {
-    console.log('bye bye');
+    log('bye bye');
   });
 };
 

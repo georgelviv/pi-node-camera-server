@@ -9,4 +9,4 @@ const {initCameraSocket} = require('./camera-socket');
 const {initWebServer} = require('./web-server');
 
 initCameraSocket({cameraStreamingPort: CAMERA_STREAMING_PORT});
-// initWebServer({webServerPort: WEB_SERVER_PORT});
+initWebServer({webServerPort: WEB_SERVER_PORT});

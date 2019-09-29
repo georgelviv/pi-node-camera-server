@@ -3,6 +3,7 @@ const express = require('express');
 const morgan = require('morgan');
 const {router} = require('./routing');
 const {initSocket} = require('./socket');
+const {log} = require('./log');
 
 
 const initWebServer = ({
@@ -17,7 +18,7 @@ const initWebServer = ({
   app.use(router);
 
   server.listen(webServerPort, () => {
-    console.log(`Listening at port ${webServerPort}`);
+    log(`Listening at port ${webServerPort}`);
   });
 };
 

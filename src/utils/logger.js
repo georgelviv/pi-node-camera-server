@@ -1,5 +1,5 @@
-const logger = (who) => (what) => {
-  console.log(`${who}: ${what}`);
+const logger = (who) => (...args) => {
+  console.log(`${who}: ${args.join(' ')}`);
 };
 
 module.exports = {
