@@ -1,23 +1,23 @@
-const {ee} = require('src/utils');
+const {ee, GLOBAL_EVENTS} = require('src/utils');
 const {socketLog} = require('./log');
-const {ImgBuf} = require('./image-buf');
+const {cameraContinuesCapture} = require('./camera-continues-capture');
+const {cameraVideoStreaming} = require('./camera-video-streaming');
 
-const socketListener = (socket) => {
+const socketListener = (isVideoStream) => (socket) => {
   const {address} = socket.address();
   const log = socketLog(address.slice(-3));
-  const handler = (img) => {
-    log('image received');
-    ee.emit('img', img);
-  };
-  const imgBuf = new ImgBuf({handler});
 
-  log('client connected');
+  if (isVideoStream) {
+    cameraVideoStreaming(socket);
+  } else {
+    cameraContinuesCapture(socket);
+  }
 
-  socket.on('data', (msg) => {
-    imgBuf.push(msg);
-  });
+  log('camera connected');
+  ee.emit(GLOBAL_EVENTS.cameraOn);
 
   socket.on('end', () => {
+    ee.emit(GLOBAL_EVENTS.cameraOff);
     log('bye bye');
   });
 };

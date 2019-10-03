@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
+  <style>
+    #img {
+      max-width: 100%;
+    }
+  </style>
 </head>
 <body>
   <h1>Hello world</h1>
@@ -16,7 +21,12 @@
 
     socket.on('image', (data) => {
       imageElem.src = 'data:image/jpeg;base64,' + data;
-    })
+    });
+
+    socket.on('mpeg', (mpeg) => {
+      imageElem.src = 'data:image/jpeg;base64,' + data;
+    });
+
   </script>
 
 </body>
