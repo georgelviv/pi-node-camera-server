@@ -1,25 +1,36 @@
-const WebSocketClient = require('websocket').client;
+const WebSocket = require('ws');
+const {ee, GLOBAL_EVENTS} = require('src/utils');
 const {log} = require('./log');
-const {handleMessage} = require('./handle-message');
 
 const initCameraClient = ({port, address}) => {
-  const client = new WebSocketClient();
-
-  client.on('connectFailed', (err) => {
-    log(`connect failed ${err}`);
+  const client = new WebSocket(`ws://${address}:${port}/`, {
+    perMessageDeflate: false
   });
 
-  client.on('connect', (connection) => {
-    log('connected');
+  let socketHeader;
 
-    connection.on('error', (err) => {
-      log(`connection failed ${err}`);
+  client.on('message', (msg) => {
+    if (!socketHeader) {
+      socketHeader = msg;
+    }
+
+    ee.emit(GLOBAL_EVENTS.cameraMpeg, {
+      socketHeader, msg
     });
-
-    connection.on('message', handleMessage);
   });
 
-  client.connect(`ws://${address}:${port}/`);
+  client.on('close', () => {
+    log('close');
+  });
+
+  client.on('error', () => {
+    log('error');
+  });
+
+  client.on('open', () => {
+    log('connected');
+  });
+
 };
 
 module.exports = {

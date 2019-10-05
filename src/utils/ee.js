@@ -7,7 +7,6 @@ const ee = new MyEmitter();
 const GLOBAL_EVENTS = {
   cameraOn: 'camera-on',
   cameraOff: 'camera-off',
-  cameraImg: 'camera-img',
   cameraMpeg: 'camera-mpeg'
 };
 

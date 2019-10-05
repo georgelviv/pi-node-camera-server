@@ -1,21 +1,11 @@
-const socketIo = require('socket.io');
-const {ee, GLOBAL_EVENTS} = require('src/utils');
+// const WebSocketServer = require('websocket').server;
 const {socketListener} = require('./socket-listener');
+const WebSocket = require('ws');
 
 const initSocket = (server) => {
-  const io = socketIo(server);
+  const wss = new WebSocket.Server({server});
 
-  io.on('connection', socketListener);
-
-  ee.on('img', (img) => {
-    io.emit('image', img.toString('base64'));
-  });
-
-  ee.on(GLOBAL_EVENTS.cameraMpeg, (mpeg) => {
-    io.emit('mpeg', mpeg);
-  });
-
-  // ee.on(GLOBAL_EVENTS.cameraOn);
+  wss.on('connection', socketListener);
 };
 
 module.exports = {

@@ -14,6 +14,7 @@ const initWebServer = ({
 
   initSocket(server);
 
+  app.use(express.static('static'));
   app.use(morgan('tiny'));
   app.use(router);
 
