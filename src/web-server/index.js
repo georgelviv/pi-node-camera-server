@@ -1,5 +1,5 @@
-const {initWebServer} = require('./web-server');
+const {WebServer} = require('./web-server');
 
 module.exports = {
-  initWebServer
+  WebServer
 };

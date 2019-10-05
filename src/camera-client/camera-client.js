@@ -1,38 +1,78 @@
 const WebSocket = require('ws');
-const {ee, GLOBAL_EVENTS} = require('src/utils');
+const {noop} = require('src/utils');
 const {log} = require('./log');
 
-const initCameraClient = ({port, address}) => {
-  const client = new WebSocket(`ws://${address}:${port}/`, {
-    perMessageDeflate: false
-  });
+class CameraClient {
+  constructor({port, address, onMsg}) {
+    this.port = port;
+    this.address = address;
+    this.socketHeader = null;
+    this.onMsg = onMsg || noop;
 
-  let socketHeader;
+    this.reconnect = true;
+    this.reconnectTimeout = 5000;
+  }
 
-  client.on('message', (msg) => {
-    if (!socketHeader) {
-      socketHeader = msg;
+  get fullAddress() {
+    return `ws://${this.address}:${this.port}/`;
+  }
+
+  handleEnd() {
+    if (this.connected) {
+      log('Connection closed');
+    }
+    this.connected = false;
+
+    setTimeout(() => {
+      this.connect(true);
+    }, this.reconnectTimeout);
+  }
+
+  connect(reconnect = false) {
+    this.client = new WebSocket(this.fullAddress, {
+      perMessageDeflate: false
+    });
+
+    if (reconnect) {
+      log('Reconnecting...');
+    } else {
+      log('Connecting...');
     }
 
-    ee.emit(GLOBAL_EVENTS.cameraMpeg, {
-      socketHeader, msg
+    this.client.on('message', this.handleMsg.bind(this));
+
+    this.client.on('close', () => {
+      this.handleEnd();
     });
-  });
 
-  client.on('close', () => {
-    log('close');
-  });
+    this.client.on('error', (err) => {
+      log('error', err);
+    });
 
-  client.on('error', () => {
-    log('error');
-  });
+    this.client.on('open', () => {
+      log(`connected at ${this.port}`);
+      this.connected = true;
+    });
 
-  client.on('open', () => {
-    log('connected');
-  });
+    this.client.on('unexpected-response', () => {
+      log('unexpected');
+    })
+  }
 
-};
+  handleMsg(msg) {
+    if (!this.socketHeader) {
+      this.socketHeader = msg;
+    }
+
+    const data = {
+      header: this.socketHeader,
+      body: msg
+    };
+
+    this.onMsg(data);
+  }
+}
 
 module.exports = {
-  initCameraClient
+  CameraClient
 };

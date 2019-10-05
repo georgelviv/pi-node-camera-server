@@ -1,38 +1,38 @@
 <!DOCTYPE html>
 <html>
-<head>>
-	<title>jsmpeg streaming</title>
-	<style type="text/css">
-		body {
-			margin: 0;
-			padding: 0;
-		}
-		.canvas-wrapper {
-			margin: 0 auto;
-			max-width: 640px;
-			max-height: 480px;
-		}
-		#videoCanvas {
-			width: 100%;
-			height: 100%;
-		}
-	</style>
+<head>
+	<title>Web streaming</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+	<link rel="icon" type="image/png" href="assets/favicon.png" />
+	<link rel="stylesheet" href="style.css">
 </head>
 <body>
-	<div class="canvas-wrapper">
-		<canvas id="videoCanvas">
-		</canvas>
+	<nav class="navbar navbar-light bg-light">
+		<span class="navbar-text">
+			Big boss watching you
+		</span>
+	</nav>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-8">
+				<div class="canvas-wrapper">
+					<canvas id="videoCanvas">
+					</canvas>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="camera-status">
+					Camera status:
+					<div class>
+						<span class="badge badge-success"></span>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
-	<script type="text/javascript" src="jsmpg.js"></script>
-	<script type="text/javascript">
-		// Show loading notice
-		var canvas = document.getElementById('videoCanvas');
-		var ctx = canvas.getContext('2d');
-		ctx.fillText('Loading...', canvas.width/2-30, canvas.height/3);
-
-		// Setup the WebSocket connection and start the player
-		var client = new WebSocket(`ws://${'192.168.31.126'}:${3000}/`);
-		var player = new jsmpeg(client, {canvas:canvas});
-	</script>
+	<script type="text/javascript" src="assets/jsmpg.js"></script>
+	<script type="text/javascript" src="app.js"></script>
 </body>
 </html>

@@ -4,13 +4,20 @@ require('module-alias/register');
 const {
   WEB_SERVER_PORT,
   CAMERA_CLIENT_PORT,
-  CAMERA_CLIENT_ADDRESS
+  CAMERA_CLIENT_ADDRESS,
+  STREAMING_PORT
 } = process.env;
-const {initWebServer} = require('./web-server');
-const {initCameraClient} = require('./camera-client');
+const {WebServer} = require('./web-server');
 
-initCameraClient({
-  port: CAMERA_CLIENT_PORT,
-  address: CAMERA_CLIENT_ADDRESS
+const webServer = new WebServer({
+  port: WEB_SERVER_PORT,
+  camera: {
+    port: CAMERA_CLIENT_PORT,
+    address: CAMERA_CLIENT_ADDRESS
+  },
+  streaming: {
+    port: STREAMING_PORT
+  }
 });
-initWebServer({webServerPort: WEB_SERVER_PORT});
+
+webServer.setup();

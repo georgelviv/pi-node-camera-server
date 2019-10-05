@@ -1,5 +1,5 @@
-const {initCameraClient} = require('./camera-client');
+const {CameraClient} = require('./camera-client');
 
 module.exports = {
-  initCameraClient
+  CameraClient
 };
