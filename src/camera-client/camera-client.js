@@ -1,5 +1,5 @@
 const WebSocket = require('ws');
-const {noop} = require('src/utils');
+const {noop, debounce} = require('src/utils');
 const {log} = require('./log');
 
 class CameraClient {
@@ -10,7 +10,13 @@ class CameraClient {
     this.onMsg = onMsg || noop;
 
     this.reconnect = true;
-    this.reconnectTimeout = 5000;
+    this.reconnectTimeout = 30 * 1000;
+    this.checkConnectionTimeout = 10 * 1000;
+
+    this.checkConnectionDebounced = debounce(
+      this.checkConnection.bind(this),
+      this.checkConnectionTimeout
+    );
   }
 
   get fullAddress() {
@@ -56,7 +62,7 @@ class CameraClient {
 
     this.client.on('unexpected-response', () => {
       log('unexpected');
-    })
+    });
   }
 
   handleMsg(msg) {
@@ -70,6 +76,12 @@ class CameraClient {
     };
 
     this.onMsg(data);
+
+    this.checkConnectionDebounced();
+  }
+
+  checkConnection() {
+    this.client.close();
   }
 }
 

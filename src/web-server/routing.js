@@ -1,15 +1,23 @@
 const path = require('path');
 const express = require('express');
-const router = express.Router();
+const {cameraRoutingCreator} = require('./camera-routing');
 
-router.get('/', (_, res) => {
-  res.sendFile(path.join(process.cwd(), 'static', 'index.html'));
-});
+const routerCreator = (app) => {
+  const router = express.Router();
 
-router.get('/check', (_, res) => {
-  res.send('ok');
-});
+  router.get('/', (_, res) => {
+    res.sendFile(path.join(process.cwd(), 'static', 'index.html'));
+  });
+
+  router.get('/check', (_, res) => {
+    res.send('ok');
+  });
+
+  router.use('/camera', cameraRoutingCreator(app));
+
+  return router;
+};
 
 module.exports = {
-  router
+  routerCreator
 };

@@ -1,7 +1,8 @@
 const http = require('http');
 const express = require('express');
 const morgan = require('morgan');
-const {router} = require('./routing');
+const cors = require('cors');
+const {routerCreator} = require('./routing');
 
 const {log} = require('./log');
 const {CameraClient} = require('src/camera-client');
@@ -46,9 +47,10 @@ class WebServer {
   }
 
   addMiddlewares() {
+    this.app.use(cors());
     this.app.use(express.static('static'));
     this.app.use(morgan('tiny'));
-    this.app.use(router);
+    this.app.use(routerCreator(this));
   }
 }
 
