@@ -35,6 +35,10 @@ class CameraStreaming {
       this.ee.removeListener(this.eventName, eventHandler);
     });
   }
+
+  close() {
+    this.wss.close();
+  }
 }
 
 module.exports = {

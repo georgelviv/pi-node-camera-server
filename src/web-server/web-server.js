@@ -1,18 +1,19 @@
 const http = require('http');
 const express = require('express');
-const morgan = require('morgan');
-const cors = require('cors');
 const {routerCreator} = require('./routing');
 
 const {log} = require('./log');
 const {CameraClient} = require('src/camera-client');
 const {CameraStreaming} = require('src/camera-streaming');
-const {ee} = require('src/utils');
+const {ee, handleSigterm} = require('src/utils');
+const {applyMiddlewares} = require('./middlewares');
 
 class WebServer {
   constructor(configs) {
     this.ee = ee;
     this.streamBufferName = 'stream-buffer';
+
+    this.cameraAddress = `http://${configs.camera.address}:${configs.camera.webPort}`;
 
     this.port = configs.port;
     this.cameraClient = new CameraClient({
@@ -25,6 +26,8 @@ class WebServer {
       ee: this.ee,
       eventName: this.streamBufferName
     });
+
+    handleSigterm(this.handleSigTerm.bind(this));
   }
 
   handleCameraMsg(msg) {
@@ -40,17 +43,20 @@ class WebServer {
   setWebServer() {
     this.app = express();
     this.server = http.createServer(this.app);
-    this.addMiddlewares();
+
+    applyMiddlewares(this.app);
+    this.app.use(routerCreator(this));
+
     this.server.listen(this.port, () => {
       log(`listen at ${this.port}`);
     });
   }
 
-  addMiddlewares() {
-    this.app.use(cors());
-    this.app.use(express.static('static'));
-    this.app.use(morgan('tiny'));
-    this.app.use(routerCreator(this));
+  handleSigTerm() {
+    log('Stopping server');
+    this.server.close();
+    this.cameraClient.close();
+    this.cameraStreaming.close();
   }
 }
 

@@ -81,6 +81,10 @@ class CameraClient {
   }
 
   checkConnection() {
+    this.close();
+  }
+
+  close() {
     this.client.close();
   }
 }
