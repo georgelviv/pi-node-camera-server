@@ -13,11 +13,10 @@ const cameraRoutingCreator = (app) => {
   router.get('/settings', (req, res) => {
     const address = `${app.cameraAddress}/camera-settings`;
     const queryParams = {iso: req.query.iso};
-    request({url: address, qs:queryParams}, (response) => {
-      console.log(response)
-    });
-    res.json({
-      'updated': false
+    request({url: address, qs:queryParams}, () => {
+      res.json({
+        'updated': true
+      });
     });
   });
 
