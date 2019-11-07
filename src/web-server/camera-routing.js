@@ -20,6 +20,16 @@ const cameraRoutingCreator = (app) => {
     });
   });
 
+  router.get('/controller-status', (req, res) => {
+    const address = `${app.cameraAddress}/status`;
+    request({url: address}, (res) => {
+      console.log('aaa', res)
+      res.json({
+        'works': true
+      });
+    });
+  });
+
   return router;
 };
 
