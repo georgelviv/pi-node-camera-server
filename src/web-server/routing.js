@@ -1,5 +1,6 @@
 const path = require('path');
 const express = require('express');
+const request = require('request');
 const {cameraRoutingCreator} = require('./camera-routing');
 
 const routerCreator = (app) => {
@@ -20,7 +21,23 @@ const routerCreator = (app) => {
     res.json(data);
   });
 
+  router.get('/controller-status', (req, res) => {
+    const address = `${app.controllerAddress}/status`;
+    request({url: address}, (err, response, body) => {
+      if (err) {
+        console.log('/controller-status error', err)
+        res.send(err);
+      } else {
+        res.json(JSON.parse(body));
+      }
+    });
+  });
+
   router.use('/camera', cameraRoutingCreator(app));
+
+  router.use('*', (_, res) => {
+    res.send('hey men, its 404')
+  })
 
   return router;
 };

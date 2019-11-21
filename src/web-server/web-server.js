@@ -14,6 +14,7 @@ class WebServer {
     this.streamBufferName = 'stream-buffer';
 
     this.cameraAddress = `http://${configs.camera.address}:${configs.camera.webPort}`;
+    this.controllerAddress = `http://${configs.controller.address}:${configs.controller.port}`;
 
     this.port = configs.port;
     this.cameraClient = new CameraClient({
