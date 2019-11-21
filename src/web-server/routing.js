@@ -13,6 +13,13 @@ const routerCreator = (app) => {
     res.send('ok');
   });
 
+  router.get('/server-name', (_, res) => {
+    const data = {
+      serverName: app.serverName
+    }
+    res.json(data);
+  });
+
   router.use('/camera', cameraRoutingCreator(app));
 
   return router;

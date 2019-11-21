@@ -6,7 +6,8 @@ const {
   CAMERA_CLIENT_PORT,
   CAMERA_CLIENT_ADDRESS,
   STREAMING_PORT,
-  CAMERA_WEB_SERVER_PORT
+  CAMERA_WEB_SERVER_PORT,
+  SERVER_NAME
 } = process.env;
 const {WebServer} = require('./web-server');
 
@@ -19,7 +20,8 @@ const webServer = new WebServer({
   },
   streaming: {
     port: STREAMING_PORT
-  }
+  },
+  serverName: SERVER_NAME
 });
 
 webServer.setup();

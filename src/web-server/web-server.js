@@ -26,6 +26,7 @@ class WebServer {
       ee: this.ee,
       eventName: this.streamBufferName
     });
+    this.serverName = configs.serverName;
 
     handleSigterm(this.handleSigTerm.bind(this));
   }
