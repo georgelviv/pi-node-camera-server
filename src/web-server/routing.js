@@ -14,13 +14,6 @@ const routerCreator = (app) => {
     res.send('ok');
   });
 
-  router.get('/server-name', (_, res) => {
-    const data = {
-      serverName: app.serverName
-    }
-    res.json(data);
-  });
-
   router.get('/controller-status', (req, res) => {
     const address = `${app.controllerAddress}/status`;
     request({url: address}, (err, response, body) => {
